@@ -1,11 +1,11 @@
 import domains.Department
 import domains.User
-import java.sql.DriverManager
-import java.sql.Connection
+import org.flywaydb.core.Flyway
 import java.io.Closeable
 import java.io.File
-import org.flywaydb.core.Flyway
-import java.sql.ResultSet
+import java.sql.Connection
+import java.sql.DriverManager
+import java.net.URLEncoder.encode
 
 class Wrapper : Closeable {
     private var con: Connection? = null
@@ -28,7 +28,7 @@ class Wrapper : Closeable {
         flyway.migrate()
     }
 
-    fun getUser(id: Int): User? {
+    fun getUserById(id: Int): User {
         val getUser =
             con!!.prepareStatement("SELECT fio, department, personalNumber, workNumber, homeNumber FROM staff WHERE id = ?")
         getUser.setInt(1, id)
@@ -43,6 +43,55 @@ class Wrapper : Closeable {
         getUser.close()
         return User(fio, departmentId, personalNumber, workNumber, homeNumber)
     }
+    fun getUserByFIO(search: String): MutableList<User> {
+        val req = "SELECT * FROM STAFF WHERE fio LIKE '%$search%'"
+        val getUser = con!!.prepareStatement(req)
+        val res = getUser.executeQuery()
+        val users: MutableList<User> = mutableListOf()
+        while (res.next()) {
+            val fio = res.getString("fio")
+            val department = res.getInt("department")
+            val personalNumber = res.getString("personalNumber")
+            val workNumber = res.getString("workNumber")
+            val homeNumber = res.getString("homeNumber")
+            users.add(User(fio, department, personalNumber, workNumber, homeNumber))
+        }
+        res.close()
+        getUser.close()
+        return users
+    }
+    fun getDepartmentByName(search: String): MutableList<Department> {
+        val req = "SELECT * FROM DEPARTMENTS WHERE name LIKE '%$search%'"
+        val getDepartment = con!!.prepareStatement(req)
+        val res = getDepartment.executeQuery()
+        val departments: MutableList<Department> = mutableListOf()
+        while (res.next()) {
+            val name = res.getString("name")
+            val phone = res.getString("phone")
+            departments.add(Department(name, phone))
+        }
+        res.close()
+        getDepartment.close()
+        return departments
+    }
+    fun getUserByDepartment(department_id: Int): MutableList<User> {
+        val getUser =
+            con!!.prepareStatement("SELECT * FROM STAFF WHERE department = ?")
+        getUser.setInt(1, department_id)
+        val res = getUser.executeQuery()
+        val users: MutableList<User> = mutableListOf()
+        while (res.next()) {
+            val fio = res.getString("fio")
+            val department = res.getInt("department")
+            val personalNumber = res.getString("personalNumber")
+            val workNumber = res.getString("workNumber")
+            val homeNumber = res.getString("homeNumber")
+            users.add(User(fio, department, personalNumber, workNumber, homeNumber))
+        }
+        res.close()
+        getUser.close()
+        return users
+    }
     fun addUser(user: User): Int? {
         val addUser =
             con!!.prepareStatement("INSERT INTO staff(fio, department, workNumber, personalNumber, homeNumber) VALUES (?, ?, ?, ?, ?)")
@@ -56,7 +105,7 @@ class Wrapper : Closeable {
         return 200
     }
 
-    fun getDepartment(id: Int): Department? {
+    fun getDepartment(id: Int): Department {
         val getDepartment = con!!.prepareStatement("SELECT name, phone FROM departments WHERE id = ?")
         getDepartment.setInt(1, id)
         val res = getDepartment.executeQuery()
@@ -81,5 +130,32 @@ class Wrapper : Closeable {
         val getDepartment = con!!.prepareStatement("SELECT * FROM staff")
         val res = getDepartment.executeQuery()
         println(res)
+    }
+    fun getUsers(): List<User> {
+        val getUsers = con!!.prepareStatement("SELECT * FROM STAFF")
+        val res = getUsers.executeQuery()
+        val users: MutableList<User> = mutableListOf()
+        while (res.next()) {
+            val fio = res.getString("fio")
+            val department = res.getInt("department")
+            val personalNumber = res.getString("personalNumber")
+            val workNumber = res.getString("workNumber")
+            val homeNumber = res.getString("homeNumber")
+            users.add(User(fio, department, personalNumber, workNumber, homeNumber))
+        }
+        getUsers.close()
+        return users
+    }
+    fun getDepartments(): List<Department> {
+        val getDepartments = con!!.prepareStatement("SELECT * FROM DEPARTMENTS")
+        val res = getDepartments.executeQuery()
+        val departments: MutableList<Department> = mutableListOf()
+        while (res.next()) {
+            val name = res.getString("name")
+            val phone = res.getString("phone")
+            departments.add(Department(name, phone))
+        }
+        getDepartments.close()
+        return departments
     }
 }

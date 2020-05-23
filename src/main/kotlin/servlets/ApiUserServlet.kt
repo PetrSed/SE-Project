@@ -1,0 +1,64 @@
+package servlets
+
+import Wrapper
+import com.google.gson.GsonBuilder
+import java.io.IOException
+import javax.servlet.ServletException
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import java.net.URLEncoder.encode
+import domains.User
+
+
+@WebServlet(name = "ApiGetUsersServlet", urlPatterns = ["api/users"])
+class ApiGetUsersServlet : HttpServlet() {
+    @Throws(ServletException::class, IOException::class)
+    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val users = wrapper.getUsers()
+        val builder = GsonBuilder()
+        val gson = builder.create()
+        wrapper.close()
+        response.setContentType("text/html;charset=UTF-8")
+        response.setCharacterEncoding("UTF-8")
+        response.writer.print(gson.toJson(users))
+
+    }
+}
+@WebServlet(name = "ApiGetUserServlet", urlPatterns = ["api/user"])
+class ApiGetUserServlet : HttpServlet() {
+    @Throws(ServletException::class, IOException::class)
+    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val id = request.getParameter("id")
+        val fio = request.getParameter("fio")
+        val department = request.getParameter("department")
+        var users: List<User>? = mutableListOf()
+        if (id != null) {
+            println(1)
+            users = listOf(wrapper.getUserById(id.toInt()))
+        } else if (fio != null){
+            println(2)
+            users = wrapper.getUserByFIO(fio)
+        } else if (department != null){
+            println(3)
+            users = wrapper.getUserByDepartment(department.toInt())
+        } else {
+            println(4)
+            users = wrapper.getUsers()
+        }
+        val builder = GsonBuilder()
+        val gson = builder.create()
+        wrapper.close()
+        response.setContentType("text/html;charset=UTF-8")
+        response.setCharacterEncoding("UTF-8")
+        response.writer.print(gson.toJson(users))
+
+
+    }
+}
+

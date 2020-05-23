@@ -17,7 +17,7 @@ class GetUserServlet : HttpServlet() {
         wrapper.connect()
         val query = request.queryString
         val id = query.substringAfter("id=")
-        val user = wrapper.getUser(id.toInt())
+        val user = wrapper.getUserById(id.toInt())
         val department = wrapper.getDepartment(user!!.department)
         request.setAttribute("id", id)
         request.setAttribute("fio", user.fio)
@@ -28,7 +28,6 @@ class GetUserServlet : HttpServlet() {
         request.setAttribute("homeNumber", user.homeNumber)
         wrapper.close()
         request.getRequestDispatcher("../userResponse.jsp").forward(request, response)
-
     }
 }
 @WebServlet(name = "GetDepartmentServlet", urlPatterns = ["get/department"])
