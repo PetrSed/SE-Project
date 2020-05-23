@@ -28,8 +28,8 @@ class ApiGetUsersServlet : HttpServlet() {
 
     }
 }
-@WebServlet(name = "ApiGetUserServlet", urlPatterns = ["api/user"])
-class ApiGetUserServlet : HttpServlet() {
+@WebServlet(name = "ApiUserServlet", urlPatterns = ["api/user"])
+class ApiUserServlet : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
@@ -39,16 +39,12 @@ class ApiGetUserServlet : HttpServlet() {
         val department = request.getParameter("department")
         var users: List<User>? = mutableListOf()
         if (id != null) {
-            println(1)
             users = listOf(wrapper.getUserById(id.toInt()))
         } else if (fio != null){
-            println(2)
             users = wrapper.getUserByFIO(fio)
         } else if (department != null){
-            println(3)
             users = wrapper.getUserByDepartment(department.toInt())
         } else {
-            println(4)
             users = wrapper.getUsers()
         }
         val builder = GsonBuilder()
@@ -57,8 +53,18 @@ class ApiGetUserServlet : HttpServlet() {
         response.setContentType("text/html;charset=UTF-8")
         response.setCharacterEncoding("UTF-8")
         response.writer.print(gson.toJson(users))
-
-
+    }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val query = request.queryString
+        val fio = request.getParameter("fio")
+        val department_id = request.getParameter("departmentId")
+        val personalNumber = request.getParameter("personalNumber")
+        val workNumber = request.getParameter("workNumber")
+        val homeNumber = request.getParameter("homeNumber")
+        val res = wrapper.addUser(User(fio, department_id.toInt(), personalNumber, workNumber, homeNumber))
+        response.writer.print("Success")
     }
 }
 

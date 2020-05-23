@@ -74,6 +74,17 @@ class Wrapper : Closeable {
         getDepartment.close()
         return departments
     }
+    fun getDepartmentIdByName(name: String): Int {
+        val getDepartment =
+            con!!.prepareStatement("SELECT id FROM departments WHERE name = ?")
+        getDepartment.setString(1, name)
+        val res = getDepartment.executeQuery()
+        res.next()
+        val departmentId = res.getInt("id")
+        res.close()
+        getDepartment.close()
+        return departmentId
+    }
     fun getUserByDepartment(department_id: Int): MutableList<User> {
         val getUser =
             con!!.prepareStatement("SELECT * FROM STAFF WHERE department = ?")

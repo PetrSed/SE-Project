@@ -10,6 +10,7 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 configurations.create('download')
 dependencies {
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation("com.h2database:h2:1.4.200")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation("org.flywaydb:flyway-core:6.3.2")

@@ -17,25 +17,46 @@ class AddUserServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
+        val departments = wrapper.getDepartments()
+        val depatments_str = StringBuilder()
+        for (department in departments) {
+            depatments_str.append("${department.name},")
+        }
+        request.setAttribute("department", depatments_str)
+        request.getRequestDispatcher("../addUser.jsp").forward(request, response)
+    }
+
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
         val query = request.queryString
         val fio = request.getParameter("fio")
-        val department_id = request.getParameter("department_id")
+        val departmentName = request.getParameter("country")
         val personalNumber = request.getParameter("personalNumber")
         val workNumber = request.getParameter("workNumber")
         val homeNumber = request.getParameter("homeNumber")
-        val res = wrapper.addUser(User(fio, department_id.toInt(), personalNumber, workNumber, homeNumber))
+        println(departmentName)
+        val departmentId = wrapper.getDepartmentIdByName(departmentName)
+        println("$fio, $departmentId, $personalNumber, $workNumber, $homeNumber")
+        val res = wrapper.addUser(User(fio, departmentId, personalNumber, workNumber, homeNumber))
         response.writer.print("Success")
     }
 }
+
 @WebServlet(name = "AddDepartmentServlet", urlPatterns = ["add/department"])
 class AddDepartmentServlet : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("../addDepartment.jsp").forward(request, response)
+    }
+
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
         val query = request.queryString
         val name = request.getParameter("name")
         val phone = request.getParameter("phone")
+        println("name, phone")
         val res = wrapper.addDepartment(Department(name, phone))
         response.writer.print("Success")
     }
