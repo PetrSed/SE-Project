@@ -51,11 +51,4 @@ class ApiGetDepartmentServlet : HttpServlet() {
         response.setCharacterEncoding("UTF-8")
         response.writer.print(gson.toJson(departments))
     }
-    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
-        val wrapper = Wrapper()
-        wrapper.connect()
-        val name = request.getParameter("name")
-        val phone = request.getParameter("phone")
-        response.writer.print("Success")
-    }
 }

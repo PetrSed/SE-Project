@@ -53,15 +53,5 @@ class ApiUserServlet : HttpServlet() {
         response.setCharacterEncoding("UTF-8")
         response.writer.print(gson.toJson(users))
     }
-    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
-        val wrapper = Wrapper()
-        wrapper.connect()
-        val fio = request.getParameter("fio")
-        val department_id = request.getParameter("departmentId")
-        val personalNumber = request.getParameter("personalNumber")
-        val workNumber = request.getParameter("workNumber")
-        val homeNumber = request.getParameter("homeNumber")
-        response.writer.print("Success")
-    }
 }
 
