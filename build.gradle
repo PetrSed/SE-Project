@@ -1,24 +1,45 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.61'
+    id 'war'
+    id 'org.gretty' version '3.0.1'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id "com.heroku.sdk.heroku-gradle" version "1.0.4"
 }
-
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
+configurations.create('download')
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation("org.flywaydb:flyway-core:6.3.2")
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'javax:javaee-api:7.0'
+    download 'org.eclipse.jetty:jetty-runner:9.4.9.v20180320'
 }
-
+repositories {
+    mavenCentral()
+    jcenter()
+}
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
+task stage() {
+    dependsOn clean, war
+}
+war.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+    into "$buildDir/server"
+    from(configurations.download) {
+        include "jetty-runner*"
+    }
+}
+
+stage.dependsOn(copyToLib)
