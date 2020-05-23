@@ -29,7 +29,6 @@ class AddUserServlet : HttpServlet() {
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
-        val query = request.queryString
         val fio = request.getParameter("fio")
         val departmentName = request.getParameter("country")
         val personalNumber = request.getParameter("personalNumber")
@@ -38,7 +37,6 @@ class AddUserServlet : HttpServlet() {
         println(departmentName)
         val departmentId = wrapper.getDepartmentIdByName(departmentName)
         println("$fio, $departmentId, $personalNumber, $workNumber, $homeNumber")
-        val res = wrapper.addUser(User(fio, departmentId, personalNumber, workNumber, homeNumber))
         response.writer.print("Success")
     }
 }
@@ -53,11 +51,9 @@ class AddDepartmentServlet : HttpServlet() {
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
-        val query = request.queryString
         val name = request.getParameter("name")
         val phone = request.getParameter("phone")
         println("name, phone")
-        val res = wrapper.addDepartment(Department(name, phone))
         response.writer.print("Success")
     }
 }

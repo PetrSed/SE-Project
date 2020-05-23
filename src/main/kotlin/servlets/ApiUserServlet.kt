@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import java.net.URLEncoder.encode
 import domains.User
 
 
@@ -57,13 +56,11 @@ class ApiUserServlet : HttpServlet() {
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
-        val query = request.queryString
         val fio = request.getParameter("fio")
         val department_id = request.getParameter("departmentId")
         val personalNumber = request.getParameter("personalNumber")
         val workNumber = request.getParameter("workNumber")
         val homeNumber = request.getParameter("homeNumber")
-        val res = wrapper.addUser(User(fio, department_id.toInt(), personalNumber, workNumber, homeNumber))
         response.writer.print("Success")
     }
 }
