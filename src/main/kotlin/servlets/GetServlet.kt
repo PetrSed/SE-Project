@@ -47,4 +47,34 @@ class GetDepartmentServlet : HttpServlet() {
         request.getRequestDispatcher("../departmentResponse.jsp").forward(request, response)
     }
 }
+@WebServlet(name = "DelUserServlet", urlPatterns = ["del/user"])
+class DelUserServlet : HttpServlet() {
+    @Throws(ServletException::class, IOException::class)
+    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("../delUser.jsp").forward(request, response)
+    }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val id = request.getParameter("id")
+        wrapper.deleteUser(id.toInt())
+        wrapper.close()
+        response.writer.print("Success")
+    }
+}
+@WebServlet(name = "DelDepartmentServlet", urlPatterns = ["del/department"])
+class DelDepartmentServlet : HttpServlet() {
+    @Throws(ServletException::class, IOException::class)
+    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("../delDepartment.jsp").forward(request, response)
+    }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val id = request.getParameter("id")
+        wrapper.deleteDepartment(id.toInt())
+        wrapper.close()
+        response.writer.print("Success")
+    }
+}
 
