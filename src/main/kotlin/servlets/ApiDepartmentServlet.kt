@@ -59,4 +59,11 @@ class ApiGetDepartmentServlet : HttpServlet() {
         wrapper.close()
         response.writer.print("Success")
     }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val name = request.getParameter("name")
+        val phone = request.getParameter("phone")
+        wrapper.addDepartment(Department(name, phone))
+        response.writer.print("Success") }
 }

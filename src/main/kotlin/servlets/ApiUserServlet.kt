@@ -61,5 +61,16 @@ class ApiUserServlet : HttpServlet() {
         wrapper.close()
         response.writer.print("Success")
     }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val fio = request.getParameter("fio")
+        val departmentId = request.getParameter("country")
+        val personalNumber = request.getParameter("personalNumber")
+        val workNumber = request.getParameter("workNumber")
+        val homeNumber = request.getParameter("homeNumber")
+        wrapper.addUser(User(fio, departmentId.toInt(), personalNumber, workNumber, homeNumber))
+        response.writer.print("Success")
+    }
 }
 
