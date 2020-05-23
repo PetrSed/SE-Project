@@ -53,7 +53,7 @@ class AddDepartmentServlet : HttpServlet() {
         wrapper.connect()
         val name = request.getParameter("name")
         val phone = request.getParameter("phone")
-        println("name, phone")
+        wrapper.addDepartment(Department(name, phone))
         response.writer.print("Success")
     }
 }

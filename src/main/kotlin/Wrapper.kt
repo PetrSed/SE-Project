@@ -186,4 +186,20 @@ class Wrapper : Closeable {
         getDepartments.close()
         return departments
     }
+    fun deleteUser(id: Int) {
+        logger.info("Get prepared statement with users")
+        val delUser = con!!.prepareStatement("DELETE FROM staff WHERE ID = ?")
+        delUser.setInt(1, id)
+        val res = delUser.execute()
+        logger.info("Close prepared statement with users")
+        delUser.close()
+    }
+    fun deleteDepartment(id: Int) {
+        logger.info("Get prepared statement with departments")
+        val delDepartment = con!!.prepareStatement("DELETE FROM departments WHERE ID = ?")
+        delDepartment.setInt(1, id)
+        val res = delDepartment.execute()
+        logger.info("Close prepared statement with departments")
+        delDepartment.close()
+    }
 }

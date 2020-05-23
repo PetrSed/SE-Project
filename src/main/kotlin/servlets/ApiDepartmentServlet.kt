@@ -51,4 +51,12 @@ class ApiGetDepartmentServlet : HttpServlet() {
         response.setCharacterEncoding("UTF-8")
         response.writer.print(gson.toJson(departments))
     }
+    override fun doDelete(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val id = request.getParameter("id")
+        wrapper.deleteDepartment(id.toInt())
+        wrapper.close()
+        response.writer.print("Success")
+    }
 }

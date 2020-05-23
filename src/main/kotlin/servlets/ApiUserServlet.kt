@@ -53,5 +53,13 @@ class ApiUserServlet : HttpServlet() {
         response.setCharacterEncoding("UTF-8")
         response.writer.print(gson.toJson(users))
     }
+    override fun doDelete(request: HttpServletRequest, response: HttpServletResponse) {
+        val wrapper = Wrapper()
+        wrapper.connect()
+        val id = request.getParameter("id")
+        wrapper.deleteUser(id.toInt())
+        wrapper.close()
+        response.writer.print("Success")
+    }
 }
 
