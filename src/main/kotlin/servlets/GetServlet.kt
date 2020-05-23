@@ -37,7 +37,6 @@ class GetDepartmentServlet : HttpServlet() {
         val wrapper = Wrapper()
         wrapper.connect()
         println("SUCCESS CONN")
-        wrapper.test()
         val query = request.queryString
         val id = query.substringAfter("id=")
         val department = wrapper.getDepartment(id.toInt())
