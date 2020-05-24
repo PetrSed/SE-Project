@@ -13,10 +13,12 @@ import Wrapper
 class GetUserServlet : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("../getUser.jsp").forward(request, response)
+    }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
-        val query = request.queryString
-        val id = query.substringAfter("id=")
+        val id = request.getParameter("id")
         val user = wrapper.getUserById(id.toInt())
         val department = wrapper.getDepartment(user.department)
         request.setAttribute("id", id)
@@ -34,11 +36,12 @@ class GetUserServlet : HttpServlet() {
 class GetDepartmentServlet : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+        request.getRequestDispatcher("../getDepartment.jsp").forward(request, response)
+    }
+    override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val wrapper = Wrapper()
         wrapper.connect()
-        println("SUCCESS CONN")
-        val query = request.queryString
-        val id = query.substringAfter("id=")
+        val id = request.getParameter("id")
         val department = wrapper.getDepartment(id.toInt())
         request.setAttribute("id", id)
         request.setAttribute("name", department.name)
