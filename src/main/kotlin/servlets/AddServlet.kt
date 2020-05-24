@@ -15,14 +15,6 @@ import domains.User
 class AddUserServlet : HttpServlet() {
     @Throws(ServletException::class, IOException::class)
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-        val wrapper = Wrapper()
-        wrapper.connect()
-        val departments = wrapper.getDepartments()
-        val depatments_str = StringBuilder()
-        for (department in departments) {
-            depatments_str.append("${department.name},")
-        }
-        request.setAttribute("department", depatments_str)
         request.getRequestDispatcher("../addUser.jsp").forward(request, response)
     }
 
@@ -34,9 +26,8 @@ class AddUserServlet : HttpServlet() {
         val personalNumber = request.getParameter("personalNumber")
         val workNumber = request.getParameter("workNumber")
         val homeNumber = request.getParameter("homeNumber")
-        println(departmentName)
         val departmentId = wrapper.getDepartmentIdByName(departmentName)
-        println("$fio, $departmentId, $personalNumber, $workNumber, $homeNumber")
+        wrapper.addUser(User(fio,departmentId, personalNumber, workNumber, homeNumber))
         response.writer.print("Success")
     }
 }
