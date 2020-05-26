@@ -1,4 +1,5 @@
 language: java
 
-install: skip
+install:
+  - chmod +x gradlew
 script: ./gradlew stage
